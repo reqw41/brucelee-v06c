@@ -233,12 +233,7 @@ title_restart:
 			ld	de,2*936
 .tw:		ld	a,1
 			call	snd_frames
-			ld	a,(p1dir)			; пробел или огонь джойстика «П» — старт одного игрока
-			and	0x10
-			jp	nz,go_1p
-			ld	a,(vec_kbmat+2)		; 1 — один игрок, 2 — двое (Ямо — второй игрок, «П» Б) (07.11)
-			and	6
-			jp	nz,go_12
+			call	tw_keys				; пробел / огонь / 1 — один игрок, 2 — двое, Ф1+Ф3 — с читом (cheat.asm)
 			ld	a,d
 			or	e
 			jp	z,.tw

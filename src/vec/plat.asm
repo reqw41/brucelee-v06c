@@ -476,15 +476,18 @@ p1dir:		db	0
 p2dir:		db	0
 ; (ряд ZX, маска AND) для R, L, D, U, огонь
 dir_kb:		db	5,0xFE, 5,0xFD, 1,0xFE, 2,0xFE, 7,0xFB		; P O A Q M
-; ряды ZX FEFE..7FFE по 5 клавиш: (смещение в vec_kbmat, маска)
-vec_zxmap:	db	8,0x20, 7,0x04, 7,0x01, 4,0x08, 6,0x40		; CAPS(СС) Z X C V
-			db	4,0x02, 6,0x08, 4,0x10, 4,0x40, 4,0x80		; A S D F G
-			db	6,0x02, 6,0x80, 4,0x20, 6,0x04, 6,0x10		; Q W E R T
-			db	2,0x02, 2,0x04, 2,0x08, 2,0x10, 2,0x20		; 1 2 3 4 5
-			db	2,0x01, 3,0x02, 3,0x01, 2,0x80, 2,0x40		; 0 9 8 7 6
-			db	6,0x01, 5,0x80, 5,0x02, 6,0x20, 7,0x02		; P O I U Y
-			db	0,0x04, 5,0x10, 5,0x08, 5,0x04, 5,0x01		; ENTER(ВК) L K J H
-			db	7,0x80, 8,0x40, 5,0x20, 5,0x40, 4,0x04		; SPACE SYM(УС) M N B
+; ряды ZX FEFE..7FFE по 5 клавиш: (смещение в vec_kbmat, маска). Владелец 08.11: буквы и цифры ZX (QAOP, Z…M) не
+; управляют — только стрелки, пробел и джойстик (p1dir -> dir_kb); остаются СС, ВК, пробел, УС (пауза, звук, BREAK).
+; NK — ячейка, которая не бывает нажата (vec_kbmat+8: только 20, 40, 80)
+NK			equ	8
+vec_zxmap:	db	8,0x20, NK,1, NK,1, NK,1, NK,1				; CAPS(СС) Z X C V
+			db	NK,1, NK,1, NK,1, NK,1, NK,1				; A S D F G
+			db	NK,1, NK,1, NK,1, NK,1, NK,1				; Q W E R T
+			db	NK,1, NK,1, NK,1, NK,1, NK,1				; 1 2 3 4 5
+			db	NK,1, NK,1, NK,1, NK,1, NK,1				; 0 9 8 7 6
+			db	NK,1, NK,1, NK,1, NK,1, NK,1				; P O I U Y
+			db	0,0x04, NK,1, NK,1, NK,1, NK,1				; ENTER(ВК) L K J H
+			db	7,0x80, 8,0x40, NK,1, NK,1, NK,1			; SPACE SYM(УС) M N B
 
 ; ---- случайность вместо ld a,r: счётчик 0 ВИ53 + накопление; портит только A ----
 plat_rand:	push	hl

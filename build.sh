@@ -5,7 +5,7 @@
 # Нужны: Node.js, Python 3 с Pillow, tools/sjasmplus, tools/zx0/zx0 (cc -O2 -o tools/zx0/zx0 tools/zx0/*.c).
 #   ./build.sh          — сборка
 #   ./build.sh check    — и проверки: run80 (логика) и run80 --ship (боевой образ) на эталонах, vecroomcheck,
-#                         vecwater (сдвиг воды), vecroom18 (колдун комнаты 18), vecwin (победа), vec2p (1 или 2 игрока), vecpause (ВК, АР2), vecscreens (титул, меню, звук титула, игра по шагам, темп — tests/screens.json)
+#                         vecwater (сдвиг воды), vecroom18 (колдун комнаты 18), vecwin (победа), vec2p (1 или 2 игрока), vecpause (ВК, АР2), veccheat (Ф1+Ф3), vecscreens (титул, меню, звук титула, игра по шагам, темп — tests/screens.json)
 set -e
 cd "$(dirname "$0")"
 TAP="orig/bugfix/BruceLee(fixed).tap"
@@ -42,4 +42,5 @@ if [ "$1" = check ]; then
   node tools/vecwin.js build/vec/brucelee.bin
   node tools/vec2p.js build/vec/brucelee.bin
   node tools/vecpause.js build/vec/brucelee.bin
+  node tools/veccheat.js build/vec/brucelee.bin
 fi

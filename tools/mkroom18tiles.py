@@ -80,7 +80,7 @@ in18 = set(mp)
 # колдуна (D0, DA, E3, EB, A5, 27) — можно: фон за шаром tile_redraw берёт из копии карты 5D00. Тайлы tile_fix (22..24,
 # 30 — комната 19) занимать можно: tile_fix возвращает заём до своих правок и занимает снова после
 SPECIAL = set(range(0x18)) | (dyn - in18) | {0xD5}   # D5: его узор (9EA8) — искра шара колдуна (room.asm, LD HL,9EA8)
-RESERVED = set(range(0xE4, 0xE8))      # узоры E4..E7 (9F20..9F3F) — код русской сборки (main.asm, 08.11): не занимать
+RESERVED = set(range(0xE4, 0xEB)) | {0xEC, 0xED}   # узоры E4..E7 — код русской сборки, E8..EA, EC..ED — клавиши старта/чит (main.asm, 08.11)
 SPECIAL |= RESERVED
 IDX = {(0, 0, 0): 0, (255, 0, 170): 7, (255, 0, 0): 2, (0, 0, 255): 5, (0, 255, 0): 4, (255, 255, 0): 6}
 hd = lambda a, b: sum(bin(x ^ y).count('1') for x, y in zip(a, b))

@@ -162,7 +162,14 @@ hcode9_end:
 			ORG	FONT + ('"' - 32) * 8	; глиф " (не используется; «!» — свободен для текстов, 07.11)
 			INCLUDE	"wizlamp.asm"
 			ASSERT	$ <= FONT + ('#' - 32) * 8
-	ELSE								; русская версия (08.11): глифы $%& и " — буквы; вывод шара и мигание фонарика —
+	ENDIF
+			ORG	0x9800 + 0xE8 * 8		; клавиши старта и скрытый старт с читом (08.11) — в узорах тайлов E8..EA
+			INCLUDE	"cheat.asm"
+			ASSERT	$ <= 0x9800 + 0xEB * 8
+			ORG	0x9800 + 0xEC * 8		; ... и EC..ED
+			INCLUDE	"cheat2.asm"
+			ASSERT	$ <= 0x9800 + 0xEE * 8
+	IFDEF	RUS							; русская версия (08.11): глифы $%& и " — буквы; вывод шара и мигание фонарика —
 			ORG	0x9800 + 0xE4 * 8		; в узорах тайлов E4..E7 (номера колдуна, после объединения нигде не стоят;
 			INCLUDE	"wizball1.asm"		; mkroom18tiles.py RESERVED)
 			INCLUDE	"wizlamp.asm"

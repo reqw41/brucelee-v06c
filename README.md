@@ -9,17 +9,11 @@ i8080 3 МГц, 64 КБ, без Z80-переходника и без квази�
 Внешность и звук — от версии **Amstrad CPC**: спрайты персонажей, палитры комнат, мелодии и эффекты (на ВИ53),
 ближний бой Ниндзя и Ямо и стрельба колдуна; ход игры — ZX. Есть **русская версия** (отдельный образ).
 
-| Заставка | Титул | Начало |
-|---|---|---|
-| ![](docs/screenshots/splash.png) | ![](docs/screenshots/title.png) | ![](docs/screenshots/game-1.png) |
+![](docs/screenshots/splash.png) ![](docs/screenshots/title.png) ![](docs/screenshots/game-1.png)
 
-| Комната с водопадом | Комната 12 | Колдун |
-|---|---|---|
-| ![](docs/screenshots/room04.png) | ![](docs/screenshots/room12.png) | ![](docs/screenshots/room18.png) |
+![](docs/screenshots/room04.png) ![](docs/screenshots/room12.png)
 
-| Финал | Русская заставка | Русский титул |
-|---|---|---|
-| ![](docs/screenshots/finale.png) | ![](docs/screenshots/splash_ru.png) | ![](docs/screenshots/title_ru.png) |
+![](docs/screenshots/splash_ru.png) ![](docs/screenshots/title_ru.png)
 
 Карта всех 20 экранов — [docs/brucelee_map.png](docs/brucelee_map.png).
 

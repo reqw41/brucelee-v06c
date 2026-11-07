@@ -1,0 +1,29 @@
+NOTICE
+======
+
+Bruce Lee (1984) is a commercial game by Datasoft; the ZX Spectrum version was
+published by U.S. Gold, the Amstrad CPC version by U.S. Gold as well. All
+rights in the original game, its audiovisual assets, manuals, and packaging
+remain with the respective copyright holders. "Bruce Lee" is a trademark of
+Linda Lee.
+
+This repository contains:
+
+1. Original work of the port authors — Vector-06C platform code under
+   `src/vec/`, tools under `tools/`, documentation under `docs/` and the root
+   README — licensed under the MIT License (see LICENSE).
+
+2. Game logic translated from the original ZX Spectrum binary (`src/model/`,
+   `src/i8080/`), data extracted at build time from the original tape and
+   Amstrad CPC files (not included), and the ready-to-run images under `rom/`.
+   These materials are included solely for non-commercial research,
+   preservation, and reproducible verification of the Vector-06C port. They
+   are not licensed under MIT. Redistribute or use them only in ways
+   consistent with applicable copyright law and the rights of the copyright
+   holders.
+
+The ZX Spectrum disassembly by Nikita Zimin
+(https://github.com/nzeemin/skoolkit-game-revs, brucelee-zx) was the starting
+point for understanding the original code.
+
+This project is not affiliated with Datasoft, U.S. Gold, or Linda Lee.

@@ -1,0 +1,1 @@
+{ "name": "s0_random", "ticks": 3000, "random": { "seed": 1, "keys": ["Q", "A", "O", "P", "Z"], "p": 0.3, "hold": [5, 40] } }

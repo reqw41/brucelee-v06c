@@ -1,0 +1,3 @@
+{ "name": "s5_sinclair", "menu": [{ "frames": 30, "keys": [] }, { "frames": 6, "keys": ["ENTER"] }, { "frames": 20, "keys": [] }, { "frames": 6, "keys": ["C"] }, { "frames": 8, "keys": [] }, { "frames": 6, "keys": ["A"] }, { "frames": 8, "keys": [] }, { "frames": 6, "keys": ["B"] }, { "frames": 8, "keys": [] }, { "frames": 6, "keys": ["ENTER"] }, { "frames": 4, "keys": [] }], "ticks": 6000,
+  "tour": { "every": 600, "rooms": [2,4,6,8,10,12,14,16,18], "from": 100 },
+  "random": { "seed": 55, "keys": ["Q","A","O","P","Z","M","6","7","8","9","0", "1","2","3","4","5"], "p": 0.25, "hold": [3, 30] } }

@@ -1,0 +1,2 @@
+{ "name": "s6_gameover", "ticks": 30000, "random": { "seed": 66, "keys": ["Q", "A", "O", "P", "Z"], "p": 0.3, "hold": [5, 60] },
+  "tour": { "every": 300, "rooms": [5,9,13,17,4,8,12,16,3,7,11,15], "from": 50 } }

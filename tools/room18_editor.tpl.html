@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Колдун комнаты 18</title>
+<style>
+/* Редактор области колдуна: холст комнаты в цветах игры (менять можно только рамку колдуна), справа — цвета и проверка */
+:root {
+  --bg: #eef0f5; --panel: #ffffff; --fg: #1b1f2b; --muted: #5d6478; --line: #d5d9e4; --accent: #2a3dc4;
+  --ok: #1e7a45; --warn: #b3261e;
+  --f-body: system-ui, -apple-system, "Segoe UI", sans-serif; --f-mono: ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12141c; --panel: #1b1e29; --fg: #e6e8f0; --muted: #9aa1b6; --line: #2d3242; --accent: #8c9bff; --ok: #5fd08f; --warn: #ff8a80; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #12141c; --panel: #1b1e29; --fg: #e6e8f0; --muted: #9aa1b6; --line: #2d3242; --accent: #8c9bff; --ok: #5fd08f; --warn: #ff8a80; color-scheme: dark }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1500px; margin: 0 auto; padding-block: 20px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; }
+h1 { font-size: 1.35rem; margin: 0; }
+.lead { margin: 4px 0 0; color: var(--muted); max-width: 90ch; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+@media (max-width: 1100px) { .main { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 12px; min-width: 0; }
+.scroll { overflow: auto; max-width: 100%; }
+canvas { display: block; image-rendering: pixelated; cursor: crosshair; touch-action: none; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button, select { font: inherit; font-size: .9rem; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+button:hover { border-color: var(--accent); }
+.sw { width: 38px; height: 30px; border-radius: 6px; border: 2px solid var(--line); padding: 0; }
+.sw.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.hint { color: var(--muted); font-size: .85rem; margin: 0; }
+.stat { font-weight: 600; }
+.stat.ok { color: var(--ok); } .stat.bad { color: var(--warn); }
+textarea { width: 100%; box-sizing: border-box; min-height: 160px; font-family: var(--f-mono); font-size: 10px; line-height: 1.1; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 7px; }
+label { font-size: .9rem; display: flex; gap: 6px; align-items: center; }
+#toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Колдун комнаты 18</h1>
+    <p class="lead">Рисунок области колдуна в цветах игры: столбцы 9–22, ряды 0–10 (рамка). Снаружи — комната для ориентира, её менять нельзя.
+      В клетке 8×8 может быть не больше двух цветов: такие клетки обводятся красным. Когда закончишь, нажми «Скопировать текст» и пришли его в чат.</p>
+  </header>
+  <div class="main">
+    <section class="panel">
+      <div class="row">
+        <label>Масштаб <select id="zoom"><option>3</option><option selected>4</option><option>5</option><option>6</option><option>8</option></select></label>
+        <label><input type="checkbox" id="grid" checked> сетка клеток</label>
+        <label><input type="checkbox" id="prev"> превью (исходный рисунок) поверх, полупрозрачно</label>
+      </div>
+      <div class="scroll"><canvas id="cv"></canvas></div>
+      <p class="hint">Левая кнопка — рисовать выбранным цветом, правая — фоном. Alt + клик — взять цвет с точки. Cmd/Ctrl+Z — отменить.
+        Колдун исчезает целиком вместе со всем, что в его клетках отличается от фона без колдуна.</p>
+    </section>
+    <aside class="panel">
+      <div><div class="hint">Цвет</div><div class="row" id="pal"></div><div class="hint" id="palName"></div></div>
+      <div class="row">
+        <button id="undo">Отменить</button>
+        <button id="reset">Как сейчас в игре</button>
+        <button id="fromPrev">Из превью (вся рамка)</button>
+      </div>
+      <div><span class="hint">Клеток больше чем с двумя цветами: </span><span id="stat" class="stat"></span></div>
+      <div class="row"><button id="copy">Скопировать текст</button><button id="load">Загрузить из текста</button></div>
+      <textarea id="out" spellcheck="false"></textarea>
+      <p class="hint">«Загрузить из текста» — вставь в поле ранее присланный текст и нажми. Правки сохраняются в браузере.</p>
+    </aside>
+  </div>
+</div>
+<div id="toast"></div>
+<script>
+/*DATA*/
+const X0 = 72, Y0 = 0, W = 112, H = 88, KEY = 'brucelee-room18-v1';
+// цвета игры в комнате 18: фон — тёмно-синий (40), малиновый (87), красный (07), синий (C0), зелёный, жёлтый
+const COL = { '.': '#000055', m: '#ff00aa', r: '#ff0000', b: '#0000ff', g: '#00ff00', y: '#ffff00' };
+const NAME = { '.': 'фон', m: 'малиновый', r: 'красный', b: 'синий', g: 'зелёный', y: 'жёлтый' };
+const PCOL = { '.': '#000000', m: '#ff00aa', r: '#ff0000', b: '#0000ff', g: '#00ff00', y: '#ffff00' };
+let img = SRC.map((r) => r.split(''));
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.length === H) s.forEach((r, y) => { for (let x = 0; x < W; x++) img[Y0 + y][X0 + x] = r[x]; }); } catch (e) {}
+let cur = 'm'; const hist = [];
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const inBox = (x, y) => x >= X0 && x < X0 + W && y >= Y0 && y < Y0 + H;
+function region() { return img.slice(Y0, Y0 + H).map((r) => r.slice(X0, X0 + W).join('')); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(region())); } catch (e) {} }
+function bad() { const out = []; for (let r = 0; r < 11; r++) for (let c = 9; c < 23; c++) { const s = new Set(); for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) s.add(img[r * 8 + y][c * 8 + x]); if (s.size > 2) out.push([r, c]); } return out; }
+function draw() {
+  const z = +document.getElementById('zoom').value; cv.width = 256 * z; cv.height = 104 * z;
+  for (let y = 0; y < 104; y++) for (let x = 0; x < 256; x++) { ctx.fillStyle = COL[img[y][x]] || '#000'; ctx.fillRect(x * z, y * z, z, z); }
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';   // снаружи рамки — притушено
+  ctx.fillRect(0, 0, X0 * z, 104 * z); ctx.fillRect((X0 + W) * z, 0, (256 - X0 - W) * z, 104 * z); ctx.fillRect(X0 * z, (Y0 + H) * z, W * z, (104 - H) * z);
+  if (document.getElementById('prev').checked) { ctx.globalAlpha = 0.45; for (let y = Y0; y < Y0 + H; y++) for (let x = X0; x < X0 + W; x++) { ctx.fillStyle = PCOL[PREV[y][x]] || '#000'; ctx.fillRect(x * z, y * z, z, z); } ctx.globalAlpha = 1; }
+  if (document.getElementById('grid').checked) { ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; for (let x = 0; x <= 256; x += 8) { ctx.beginPath(); ctx.moveTo(x * z + .5, 0); ctx.lineTo(x * z + .5, 104 * z); ctx.stroke(); } for (let y = 0; y <= 104; y += 8) { ctx.beginPath(); ctx.moveTo(0, y * z + .5); ctx.lineTo(256 * z, y * z + .5); ctx.stroke(); } }
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.strokeRect(X0 * z, Y0 * z, W * z, H * z);
+  const b = bad(); ctx.strokeStyle = '#ff3030'; ctx.lineWidth = 2; for (const [r, c] of b) ctx.strokeRect(c * 8 * z + 1, r * 8 * z + 1, 8 * z - 2, 8 * z - 2);
+  const st = document.getElementById('stat'); st.textContent = b.length ? b.length + ' — исправь (при сборке лишний цвет заменится самым частым в клетке)' : '0 — всё в порядке'; st.className = 'stat ' + (b.length ? 'bad' : 'ok');
+  document.getElementById('out').value = 'ROOM18 ' + X0 + ' ' + Y0 + ' ' + W + ' ' + H + '\n' + region().join('\n');
+}
+const pal = document.getElementById('pal');
+for (const k of Object.keys(COL)) { const b = document.createElement('button'); b.className = 'sw' + (k === cur ? ' on' : ''); b.style.background = COL[k]; b.title = NAME[k]; b.onclick = () => { cur = k; [...pal.children].forEach((e) => e.classList.remove('on')); b.classList.add('on'); document.getElementById('palName').textContent = NAME[k]; }; pal.appendChild(b); }
+document.getElementById('palName').textContent = NAME[cur];
+let painting = null;
+function at(e) { const r = cv.getBoundingClientRect(), z = cv.width / 256; return [Math.floor((e.clientX - r.left) * (cv.width / r.width) / z), Math.floor((e.clientY - r.top) * (cv.height / r.height) / z)]; }
+function put(e) { const [x, y] = at(e); if (!inBox(x, y) || img[y][x] === painting) return; img[y][x] = painting; draw(); }
+cv.addEventListener('contextmenu', (e) => e.preventDefault());
+cv.addEventListener('pointerdown', (e) => {
+  const [x, y] = at(e); if (y < 0 || y >= 104 || x < 0 || x >= 256) return;
+  if (e.altKey) { const k = img[y][x]; [...pal.children][Object.keys(COL).indexOf(k)].click(); return; }
+  if (!inBox(x, y)) return;
+  hist.push(region()); if (hist.length > 200) hist.shift();
+  painting = e.button === 2 ? '.' : cur; cv.setPointerCapture(e.pointerId); put(e);
+});
+cv.addEventListener('pointermove', (e) => { if (painting !== null) put(e); });
+cv.addEventListener('pointerup', () => { if (painting !== null) { painting = null; save(); } });
+function setRegion(rows) { rows.forEach((r, y) => { for (let x = 0; x < W; x++) img[Y0 + y][X0 + x] = r[x] in COL ? r[x] : '.'; }); save(); draw(); }
+document.getElementById('undo').onclick = () => { if (hist.length) setRegion(hist.pop()); };
+document.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); document.getElementById('undo').click(); } });
+document.getElementById('reset').onclick = () => { hist.push(region()); setRegion(SRC.slice(Y0, Y0 + H).map((r) => r.slice(X0, X0 + W))); toast('Как сейчас в игре'); };
+document.getElementById('fromPrev').onclick = () => { hist.push(region()); setRegion(PREV.slice(Y0, Y0 + H).map((r) => r.slice(X0, X0 + W))); toast('Взято из превью'); };
+document.getElementById('load').onclick = () => {
+  const l = document.getElementById('out').value.split('\n').map((s) => s.trim()).filter((s) => s && !s.startsWith('ROOM18'));
+  if (l.length !== H || l.some((s) => s.length !== W)) { toast('Нужно ' + H + ' строк по ' + W + ' знаков'); return; }
+  hist.push(region()); setRegion(l); toast('Загружено');
+};
+['zoom', 'grid', 'prev'].forEach((id) => document.getElementById(id).onchange = draw);
+function toast(t) { const e = document.getElementById('toast'); e.textContent = t; e.style.opacity = 1; clearTimeout(toast.t); toast.t = setTimeout(() => e.style.opacity = 0, 1800); }
+document.getElementById('copy').onclick = () => { const ta = document.getElementById('out'); navigator.clipboard.writeText(ta.value).then(() => toast('Скопировано — вставь в чат'), () => { ta.focus(); ta.select(); toast('Текст выделен — нажми Cmd+C'); }); };
+draw();
+</script>
+</body>
+</html>

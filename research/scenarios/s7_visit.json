@@ -1,0 +1,1 @@
+{"name": "s7_visit", "ticks": 30000, "policy": {"name": "visit", "seed": 77, "stay": 60, "p": 0.15}, "pokes": [{"tick": 0, "every": 200, "set": {"FED0": 48, "FED1": 57}}]}

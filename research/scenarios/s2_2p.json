@@ -1,0 +1,3 @@
+{ "name": "s2_2p", "menu": [{ "frames": 30, "keys": [] }, { "frames": 6, "keys": ["ENTER"] }, { "frames": 20, "keys": [] }, { "frames": 6, "keys": ["A"] }, { "frames": 8, "keys": [] }, { "frames": 6, "keys": ["ENTER"] }, { "frames": 4, "keys": [] }], "ticks": 9000,
+  "tour": { "every": 450, "rooms": [3,7,11,15,19,2,6,10,14,18,1,5,9,13,17,0,4,8,12,16], "from": 200 },
+  "random": { "seed": 22, "keys": ["Q", "A", "O", "P", "Z"], "p": 0.35, "hold": [3, 30] } }

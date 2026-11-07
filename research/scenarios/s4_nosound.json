@@ -1,0 +1,3 @@
+{ "name": "s4_nosound", "menu": [{ "frames": 30, "keys": [] }, { "frames": 6, "keys": ["ENTER"] }, { "frames": 20, "keys": [] }, { "frames": 6, "keys": ["SYM"] }, { "frames": 8, "keys": [] }, { "frames": 6, "keys": ["ENTER"] }, { "frames": 4, "keys": [] }], "ticks": 8000,
+  "tour": { "every": 400, "rooms": [19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0], "from": 100 },
+  "random": { "seed": 44, "keys": ["Q", "A", "O", "P", "Z"], "p": 0.3, "hold": [5, 40] } }

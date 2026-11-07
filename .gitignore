@@ -1,0 +1,10 @@
+# сборка и чужое (skool nzeemin — в ref/, оригинал ZX — в orig/) — не в репозитории
+build/
+ref/
+orig/
+tools/.venv/
+tools/sjasmplus
+tools/zx0/zx0
+__pycache__/
+.DS_Store
+src/i8080/gen/

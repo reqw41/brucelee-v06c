@@ -1,7 +1,7 @@
 #!/bin/sh
 # Полная сборка Bruce Lee для Вектора-06Ц: лента ZX (orig/bugfix, не в репозитории) -> эталонный образ ->
 # данные -> игра build/vec/brucelee.bin -> образ с заставкой rom/BruceLee-v06c.r0m / .c00; русская — brucelee_ru.bin ->
-# rom/BruceLee-v06c-ru.r0m / .c00 (tools/mkru.py).
+# rom/BruceLee-v06c-ru.r0m / .c00 (tools/mkru.py); без заставки (с 0x0100, эмуляторы и CP/M) — rom/BruceLee-v06c.rom, -ru.rom.
 # Нужны: Node.js, Python 3 с Pillow, tools/sjasmplus, tools/zx0/zx0 (cc -O2 -o tools/zx0/zx0 tools/zx0/*.c).
 #   ./build.sh          — сборка
 #   ./build.sh check    — и проверки: run80 (логика) и run80 --ship (боевой образ) на эталонах, vecroomcheck,

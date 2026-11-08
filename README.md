@@ -26,6 +26,7 @@ i8080 3 МГц, 64 КБ, без Z80-переходника и без квази�
 |---|---|
 | [`rom/BruceLee-v06c.c00`](rom/BruceLee-v06c.c00), [`.r0m`](rom/BruceLee-v06c.r0m), [`.mgl`](rom/BruceLee-v06c.mgl) | английская версия |
 | [`rom/BruceLee-v06c-ru.c00`](rom/BruceLee-v06c-ru.c00), [`.r0m`](rom/BruceLee-v06c-ru.r0m), [`.mgl`](rom/BruceLee-v06c-ru.mgl) | русская версия: тексты, заставка, шапка «И1 … РЕКОРД … ЖИЗНИ» |
+| [`rom/BruceLee-v06c.rom`](rom/BruceLee-v06c.rom), [`rom/BruceLee-v06c-ru.rom`](rom/BruceLee-v06c-ru.rom) | без заставки, с адреса 0x0100: для эмуляторов как `.rom`, для CP/M — переименовать в `.COM` |
 
 ## Управление
 

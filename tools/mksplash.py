@@ -214,6 +214,12 @@ if r.returncode: print(r.stdout, r.stderr); raise SystemExit(1)
 rom = open(os.path.join(B, 'splash.rom'), 'rb').read()
 assert len(rom) == 0x10000
 os.makedirs(os.path.join(ROOT, 'rom'), exist_ok=True)
+# без заставки, с 0x0100 (08.11): .rom для эмуляторов и для CP/M (переименовать в .COM) — src/vec/boot0100.asm
+r = subprocess.run([os.path.join(ROOT, 'tools/sjasmplus'), '--nologo', '--i8080', '-I' + B, os.path.join(ROOT, 'src/vec/boot0100.asm')],
+                   cwd=B, capture_output=True, text=True)
+if r.returncode: print(r.stdout, r.stderr); raise SystemExit(1)
+COM = 'rom/BruceLee-v06c-ru.rom' if RU else 'rom/BruceLee-v06c.rom'
+open(os.path.join(ROOT, COM), 'wb').write(open(os.path.join(B, 'boot0100.bin'), 'rb').read())
 NAME = 'rom/BruceLee-v06c-ru.' if RU else 'rom/BruceLee-v06c.'
 for ext in ('r0m', 'c00'): open(os.path.join(ROOT, NAME + ext), 'wb').write(rom)
-print(f'цветов заставки {len(combos)}, игра {len(game)} -> {n} Б (ZX0), {NAME}r0m/.c00')
+print(f'цветов заставки {len(combos)}, игра {len(game)} -> {n} Б (ZX0), {NAME}r0m/.c00; без заставки {COM} ({os.path.getsize(os.path.join(ROOT, COM))} Б)')

@@ -813,6 +813,8 @@ plat_screen:
 plat_show:	call	flash_redraw
 			call	timer_now			; начало показов (ВИ53, счётчик 0 — вниз, 1,5 МГц)
 			ld	(ps_t0),hl
+			ld	a,(sh_def)			; прошлый проход откладывал — в этом враги показываются обязательно (08.11,
+			ld	(sh_prev),a			; владелец: Ямо падал «без кадров», пока Брюс дрался с Ниндзя)
 			xor	a
 			ld	(sh_def),a
 			ld	b,16				; Брюс — первым (игрок), враги — если хватает времени прохода
@@ -822,7 +824,10 @@ plat_show:	call	flash_redraw
 			ld	b,8
 ; показ записи B, если с начала показов прошло меньше SH_LIMIT отсчётов; иначе — отложить (want != disp остаётся,
 ; дорисуется в следующем проходе; шаг логики не ждёт лишний кадр)
-show_late:	push	bc
+show_late:	ld	a,(sh_prev)			; откладывать не больше одного прохода подряд
+			or	a
+			jp	nz,show_one
+			push	bc
 			call	timer_now
 			ld	a,(ps_t0)
 			sub	l
@@ -838,6 +843,7 @@ show_late:	push	bc
 SH_LIMIT	equ	2000				; ~22 тыс. тактов: ещё один показ и шаг логики укладываются в кадр
 ps_t0:		dw	0
 sh_def:		db	0					; 1 — в этом проходе показ отложен (vecsoak: want != disp допустимо)
+sh_prev:	db	0					; 1 — в прошлом
 ; CAE2 -> C2F7: показать область персонажа HL сразу
 plat_show1:	call	pers_slot
 			ld	b,c

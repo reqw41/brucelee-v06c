@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Стенд паузы (владелец 07.11): ВК — пауза (ZX ENTER), в паузе игра стоит; ВК — дальше; АР2 в паузе — выход в титул
-// (title_restart); АР2 без паузы ничего не делает.   node tools/vecpause.js [образ]   NEG=1 — без выхода по АР2
+// (title_restart); АР2 без паузы ничего не делает; СС + пробел (BREAK ZX) не выходит в титул.   node tools/vecpause.js [образ]   NEG=1 — без выхода по АР2
 'use strict';
 const fs = require('fs'), path = require('path');
 const E = require('./vec_emu'), VK = require('./vecshot_keys');
@@ -25,5 +25,7 @@ r = run('400:vk+ 410:vk- 600:ar2+ 610:ar2-', 900);
 ck('АР2 в паузе — титул', r.title >= 600 && r.title < 640, `title_restart на кадре ${r.title}`);
 r = run('400:ar2+ 410:ar2-', 700);
 ck('АР2 без паузы — ничего', r.title < 0 && d(r.pp, 450, 650) > 80, `title_restart ${r.title}, проходов ${d(r.pp, 450, 650)}`);
-console.log(`пауза: проверок 4, неверно ${bad}`);
+r = run('400:ss+ 400:space+ 440:ss- 440:space-', 700);
+ck('СС + пробел — не выход (BREAK ZX убран)', r.title < 0, `title_restart ${r.title}`);
+console.log(`пауза: проверок 5, неверно ${bad}`);
 process.exit(bad ? 1 : 0);

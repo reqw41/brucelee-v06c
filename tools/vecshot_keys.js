@@ -1,7 +1,7 @@
 // Клавиши Вектора для стендов (матрица vector06js) и снимок экрана 256x256 по палитре образа.
 'use strict';
 const fs = require('fs'), { execSync } = require('child_process');
-const VKEYS = { f1: [1, 0x08], f3: [1, 0x20], a: [4, 0x02], b: [4, 0x04], c: [4, 0x08], d: [4, 0x10], e: [4, 0x20], f: [4, 0x40], g: [4, 0x80],
+const VKEYS = { ss: [8, 0x20], f1: [1, 0x08], f3: [1, 0x20], a: [4, 0x02], b: [4, 0x04], c: [4, 0x08], d: [4, 0x10], e: [4, 0x20], f: [4, 0x40], g: [4, 0x80],
   h: [5, 0x01], i: [5, 0x02], j: [5, 0x04], k: [5, 0x08], l: [5, 0x10], m: [5, 0x20], n: [5, 0x40], o: [5, 0x80],
   p: [6, 0x01], q: [6, 0x02], r: [6, 0x04], s: [6, 0x08], t: [6, 0x10], u: [6, 0x20], v: [6, 0x40], w: [6, 0x80],
   x: [7, 0x01], y: [7, 0x02], z: [7, 0x04], space: [7, 0x80],
@@ -16,7 +16,8 @@ function parse(s) {
   return plan;
 }
 function apply(m, acts) {
-  for (const [k, d] of acts || []) { const e = VKEYS[k]; if (d) m.keyboard.matrix[e[0]] |= e[1]; else m.keyboard.matrix[e[0]] &= ~e[1]; }
+  for (const [k, d] of acts || []) { if (k === 'ss') { m.keyboard.ss = !!d; continue; }   // СС — отдельный бит порта 01 (keyboard.ss)
+    const e = VKEYS[k]; if (d) m.keyboard.matrix[e[0]] |= e[1]; else m.keyboard.matrix[e[0]] &= ~e[1]; }
 }
 function shot(m, out, palAddr) {
   const PAL = Array.isArray(palAddr) ? palAddr : Array.from({ length: 16 }, (_, i) => m.rd(palAddr + i));
